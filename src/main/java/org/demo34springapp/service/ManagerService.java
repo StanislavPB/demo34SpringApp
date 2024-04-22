@@ -3,10 +3,13 @@ package org.demo34springapp.service;
 import lombok.AllArgsConstructor;
 import org.demo34springapp.dto.managerDTO.ManagerCreateRequestDto;
 import org.demo34springapp.dto.managerDTO.ManagerCreateResponseDto;
+import org.demo34springapp.dto.managerDTO.ManagerResponseDto;
 import org.demo34springapp.entity.Manager;
 import org.demo34springapp.entity.Role;
 import org.demo34springapp.repository.ManagerRepository;
 import org.demo34springapp.repository.RoleRepository;
+import org.demo34springapp.service.exception.AlreadyExistException;
+import org.demo34springapp.service.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,16 +36,31 @@ public class ManagerService {
             if (defaultRole.isPresent()) {
                 newManager.setRole(defaultRole.get());
             } else {
-                throw new IllegalArgumentException("Role 'USER' not found");
+                throw new NotFoundException("Role 'USER' not found");
             }
 
             Manager savedManager = repository.save(newManager);
+
             return ManagerCreateResponseDto.builder()
                     .id(savedManager.getId())
                     .managerName(savedManager.getManagerName())
                     .roleName(savedManager.getRole().toString())
                     .build();
+        } else {
+            throw new AlreadyExistException("Manager with name " + request.getManagerName() + " is already exist!");
         }
-
     }
+
+    public ManagerResponseDto findByManagerName(String managerName) {
+        Manager manager = repository.findByManagerName(managerName)
+                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found!"));
+        return new ManagerResponseDto(
+                manager.getId(),
+                manager.getManagerName(),
+                manager.getEmail(),
+                manager.getRole()
+        );
+    }
+
+
 }
