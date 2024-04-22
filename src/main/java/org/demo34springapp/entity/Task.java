@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Task {
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Integer id;
+    private Integer id;
     private String taskName;
     private String description;
     private LocalDateTime createDate;
@@ -26,4 +26,5 @@ public class Task {
     @JoinColumn(name = "manager_id")
     private Manager manager;
     private TaskStatus status;
+
 }

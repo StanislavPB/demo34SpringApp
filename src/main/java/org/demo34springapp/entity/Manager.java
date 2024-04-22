@@ -1,9 +1,7 @@
 package org.demo34springapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Manager {
 
     @Id
@@ -23,5 +22,12 @@ public class Manager {
     private LocalDateTime createManagerDate;
     private LocalDateTime lastUpdate;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Task> tasks;
 
 }
