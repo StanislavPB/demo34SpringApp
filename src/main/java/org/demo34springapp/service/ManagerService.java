@@ -62,5 +62,10 @@ public class ManagerService {
         );
     }
 
+    public Manager findByManagerNameForCreateTask(String managerName){
+        return repository.findByManagerName(managerName)
+                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found!"));
+    }
+
 
 }
