@@ -1,0 +1,137 @@
+Написать RESTful API приложение, которое обеспечивало добавление, хранение списка задач для пользователя
+Пользователи могут создавать, редактировать и удалять свои задачи
+
+Просмотр списка задач доступен всем пользователям
+
+Для администратора доступен сервис по управлению пользователями
+
+
+-------------------------------------------------------------
+
+
+1) Entity
+
+Manager
+- Integer id
+- String managerName
+- String password
+- String email
+- LocalDataTime createManagerDate
+- LocalDataTime lastUpdate
+
+
+Task
+- Integer id
+- String taskName
+- String description
+- LocalDataTime createDate
+- LocalDataTime lastUpdate
+- LocalDataTime deadline
+- Manager manager
+- TaskStatus status (enum)
+
+
+2) Repository
+ManagerRepository
+TaskRepository
+
+
+
+3) список запросов, которые наше приложение готово принимать и обрабатывать
+
+- получение списка всех задач
+method: GET
+URL: /api/tasks
+
+Request: -
+
+Response:
+[
+{   "id" : 1,
+    "taskName":"task1",
+    "description":"description task1",
+    "createDate":"...",
+    "deadline":"...",
+    "managerName":"Ruslan",
+    "status":"OPEN"
+}
+]
+
+- получение задачи по id
+method: GET
+URL: /api/tasks/{id}
+
+Request: - id (как передавать - обсудим отдельно)
+
+response:
+{   "id" : 1,
+    "taskName":"task1",
+    "description":"description task1",
+    "createDate":"...",
+    "deadline":"...",
+    "managerName":"Ruslan",
+    "status":"OPEN"
+
+}
+
+
+- создать новую задачу
+method: POST
+URL: /api/tasks
+
+Request body:
+{
+    "taskName":"task1",
+    "description":"description task1",
+     "deadline":"...",
+     "managerName":"managerName1"
+     }
+
+     Response :
+
+     {
+         "id" : 1,
+         "taskName":"task1",
+         "description":"description task1",
+         "createDate":"...",
+         "lastUpdate":"...",
+         "deadline":"...",
+         "managerName":"Ruslan",
+         "status":"OPEN"
+     }
+
+     ..........
+
+     Запрос администратора на регистрацию нового пользователя
+
+     - создать нового менеджера
+     method: POST
+     URL:/ api/admin/managers
+
+     Request body:
+     {
+     "managerName": "name1",
+     "password":"pass12345",
+     "email": "aaa@gmail.com"
+     }
+
+    Response:
+    {
+    "id":1,
+    "managerName":"name1"
+    }
+
+    - получить список всех пользователей
+
+    method: GET
+    URL:/api/admin/managers
+
+    Response:
+
+    - id
+    - managerName
+    - email
+    - createManagerDate
+    - lastUpdate
+
+
