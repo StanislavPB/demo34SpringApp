@@ -1,16 +1,16 @@
-package org.demo34springapp.dto.managerDTO;
+package org.demo34springapp.dto.managerDto;
+
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.demo34springapp.entity.Role;
+import org.demo34springapp.domain.Role;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ManagerResponseDto {
+public class ManagerResponseDTO {
+
     private Integer id;
     private String managerName;
     private String email;

@@ -1,71 +1,55 @@
 package org.demo34springapp.service;
 
-import lombok.AllArgsConstructor;
-import org.demo34springapp.dto.managerDTO.ManagerCreateRequestDto;
-import org.demo34springapp.dto.managerDTO.ManagerCreateResponseDto;
-import org.demo34springapp.dto.managerDTO.ManagerResponseDto;
-import org.demo34springapp.entity.Manager;
-import org.demo34springapp.entity.Role;
+import lombok.RequiredArgsConstructor;
+import org.demo34springapp.domain.Manager;
+import org.demo34springapp.domain.Role;
+import org.demo34springapp.dto.managerDto.ManagerCreateRequestDTO;
+import org.demo34springapp.dto.managerDto.ManagerCreateResponseDTO;
+import org.demo34springapp.dto.managerDto.ManagerResponseDTO;
 import org.demo34springapp.repository.ManagerRepository;
 import org.demo34springapp.repository.RoleRepository;
 import org.demo34springapp.service.exception.AlreadyExistException;
 import org.demo34springapp.service.exception.NotFoundException;
+import org.demo34springapp.service.util.ManagerConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ManagerService {
 
     private final ManagerRepository repository;
     private final RoleRepository roleRepository;
+    private final ManagerConverter converter;
 
+    public ManagerResponseDTO findByManagerName(String managerName) {
+        Manager manager = repository.findByManagerName(managerName)
+                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found"));
+        return converter.toDto(manager);
+    }
 
+    public Manager findByManagerNameForCreateTask(String managerName) {
+        return repository.findByManagerName(managerName)
+                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found"));
 
-    public ManagerCreateResponseDto createManager(ManagerCreateRequestDto request){
+    }
 
+    public ManagerCreateResponseDTO createManager(ManagerCreateRequestDTO request){
         if (repository.findByManagerName(request.getManagerName()).isEmpty()) {
-            Manager newManager = Manager.builder()
-                    .managerName(request.getManagerName())
-                    .password(request.getPassword())
-                    .email(request.getEmail())
-                    .build();
+            Manager newManager = converter.fromDto(request);
             Optional<Role> defaultRole = roleRepository.findByName("USER");
 
             if (defaultRole.isPresent()) {
                 newManager.setRole(defaultRole.get());
             } else {
-                throw new NotFoundException("Role 'USER' not found");
+                throw new NotFoundException("Role 'USER' not found!");
             }
 
-            Manager savedManager = repository.save(newManager);
-
-            return ManagerCreateResponseDto.builder()
-                    .id(savedManager.getId())
-                    .managerName(savedManager.getManagerName())
-                    .roleName(savedManager.getRole().toString())
-                    .build();
+            Manager savedmanager = repository.save(newManager);
+            return converter.toCreateDto(savedmanager);
         } else {
             throw new AlreadyExistException("Manager with name " + request.getManagerName() + " is already exist!");
         }
     }
-
-    public ManagerResponseDto findByManagerName(String managerName) {
-        Manager manager = repository.findByManagerName(managerName)
-                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found!"));
-        return new ManagerResponseDto(
-                manager.getId(),
-                manager.getManagerName(),
-                manager.getEmail(),
-                manager.getRole()
-        );
-    }
-
-    public Manager findByManagerNameForCreateTask(String managerName){
-        return repository.findByManagerName(managerName)
-                .orElseThrow(() -> new NotFoundException("Manager with name " + managerName + " not found!"));
-    }
-
-
 }

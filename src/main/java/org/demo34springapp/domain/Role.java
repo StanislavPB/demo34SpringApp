@@ -1,24 +1,29 @@
-package org.demo34springapp.entity;
-
+package org.demo34springapp.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
+
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
+    private Integer id;
     private String name;
 
-    public Role(String name) {
-        this.name = name;
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + name.toUpperCase();
     }
 }

@@ -1,62 +1,85 @@
-
 package org.demo34springapp.service.util;
 
-import org.demo34springapp.dto.managerDTO.ManagerCreateResponseDto;
-import org.demo34springapp.dto.taskDto.TaskCreateRequestDto;
-import org.demo34springapp.dto.taskDto.TaskCreateResponseDto;
-import org.demo34springapp.dto.taskDto.TaskResponseDto;
-import org.demo34springapp.entity.Role;
-import org.demo34springapp.entity.Task;
+
+import org.demo34springapp.domain.Role;
+import org.demo34springapp.domain.Task;
+import org.demo34springapp.dto.managerDto.ManagerCreateResponseDTO;
+import org.demo34springapp.dto.taskDto.TaskCreateOrUpdateResponseDTO;
+import org.demo34springapp.dto.taskDto.TaskCreateRequestDTO;
+import org.demo34springapp.dto.taskDto.TaskResponseDTO;
+import org.demo34springapp.dto.taskDto.TaskUpdateRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskConverter {
 
-
-    public TaskCreateResponseDto toCreateDTO(Task task) {
-        TaskCreateResponseDto response = new TaskCreateResponseDto();
-
-        response.setId(task.getId());
-        response.setTaskName(task.getTaskName());
-        response.setDescription(task.getDescription());
-        response.setDeadline(task.getDeadline());
-        response.setStatus(task.getStatus());
+    public TaskCreateOrUpdateResponseDTO toCreateDto(Task task) {
+        TaskCreateOrUpdateResponseDTO dto = new TaskCreateOrUpdateResponseDTO();
+        dto.setId(task.getId());
+        dto.setTaskName(task.getTaskName());
+        dto.setDescription(task.getDescription());
+        dto.setCreateDate(task.getCreateDate());
+        dto.setLastUpdate(task.getLastUpdate());
+        dto.setDeadline(task.getDeadline());
+        dto.setStatus(task.getStatus());
 
         Role managerRole = task.getManager().getRole();
 
-        response.setManager(new ManagerCreateResponseDto(
-                task.getId(),
+        dto.setManagerCreateResponseDTO(new ManagerCreateResponseDTO(
+                task.getManager().getId(),
                 task.getManager().getManagerName(),
-                managerRole.getName()
-        ));
+                managerRole.getName()));
 
-        return response;
-
+        return dto;
     }
 
-    public TaskResponseDto toDto(Task task) {
-        TaskResponseDto response = new TaskResponseDto();
+    public TaskResponseDTO toDto(Task task) {
+        TaskResponseDTO dto = new TaskResponseDTO();
+        dto.setId(task.getId());
+        dto.setTaskName(task.getTaskName());
+        dto.setDescription(task.getDescription());
+        dto.setCreateDate(task.getCreateDate());
+        dto.setLastUpdate(task.getLastUpdate());
+        dto.setDeadline(task.getDeadline());
+        dto.setStatus(task.getStatus());
 
-        response.setId(task.getId());
-        response.setTaskName(task.getTaskName());
-        response.setDescription(task.getDescription());
-        response.setCreateDate(task.getCreateDate());
-        response.setLastUpdate(task.getLastUpdate());
-        response.setDeadline(task.getDeadline());
-        response.setStatus(task.getStatus());
-
-        return response;
-
+        return dto;
     }
 
-    public Task fromCreateRequest(TaskCreateRequestDto request) {
+    public Task fromCreateRequest(TaskCreateRequestDTO dto) {
         Task task = new Task();
-        task.setTaskName(request.getTaskName());
-        task.setDescription(request.getDescription());
-        task.setDeadline(request.getDeadline());
+        if (dto.getTaskName() != null) {
+            task.setTaskName(dto.getTaskName());
+        }
+        if (dto.getDescription() != null) {
+            task.setDescription(dto.getDescription());
+        }
+        if (dto.getDeadline() != null) {
+            task.setDeadline(dto.getDeadline());
+        }
 
         return task;
     }
 
+    public Task fromUpdateRequest(TaskUpdateRequestDTO dto) {
+        Task task = new Task();
+        if (dto.getId() != null) {
+            task.setId(dto.getId());
+        }
+
+        if (dto.getTaskName() != null) {
+            task.setTaskName(dto.getTaskName());
+        }
+        if (dto.getDescription() != null) {
+            task.setDescription(dto.getDescription());
+        }
+        if (dto.getDeadline() != null) {
+            task.setDeadline(dto.getDeadline());
+        }
+        if (dto.getStatus() != null) {
+            task.setStatus(dto.getStatus());
+        }
+        return task;
+    }
 
 }

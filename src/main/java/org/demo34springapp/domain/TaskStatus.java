@@ -1,7 +1,7 @@
-package org.demo34springapp.entity;
+package org.demo34springapp.domain;
 
 public enum TaskStatus {
     OPEN,
     CLOSE,
-    OnHOLD
+    ON_HOLD
 }

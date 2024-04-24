@@ -1,4 +1,4 @@
-package org.demo34springapp.dto.managerDTO;
+package org.demo34springapp.dto.taskDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ManagerCreateRequestDto {
+public class TaskCreateRequestDTO {
 
+    private String taskName;
+    private String description;
+    private LocalDateTime deadline;
     private String managerName;
-    private String password;
-    private String email;
 
 }
