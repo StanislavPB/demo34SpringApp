@@ -9,9 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.Base64;
 
+@Component
 
 public class BasicAuthFilter extends BasicAuthenticationFilter {
 
